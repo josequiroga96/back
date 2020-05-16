@@ -3,38 +3,28 @@ package com.ecommerce.back.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "image")
     private String image;
 
-    @Column(name = "brand")
     private String brand;
 
-    @Column(name = "price")
     private Float price;
 
-    @Column(name = "category")
     private String category;
 
-    @Column(name = "stock")
     private Float stock;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "rating")
     private Float rating;
 
-    @Column(name = "reviews")
     private Float reviews;
 
     public Product() {
