@@ -1,5 +1,6 @@
 package com.ecommerce.back.controllers;
 
+import com.ecommerce.back.exceptions.ResourceNotFoundException;
 import com.ecommerce.back.models.User;
 import com.ecommerce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,12 @@ public class UserController {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
+        return ResponseEntity.ok().body(user);
     }
 }
