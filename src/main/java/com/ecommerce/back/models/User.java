@@ -1,6 +1,8 @@
 package com.ecommerce.back.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -10,16 +12,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Email can not be blank")
     @Column(name = "email", unique = true)
     private String email;
 
+    @NotBlank(message = "Username can not be blank")
     @Column(name = "username", unique = true)
     private String username;
 
+    @NotBlank(message = "Password can not be blank")
     @Column(name = "password")
     private String password;
 
-    @Column(name = "is_admin")
+    @NotNull
+    @Column(name = "is_admin", columnDefinition = "boolean default false")
     private Boolean isAdmin;
 
     public Long getId() {

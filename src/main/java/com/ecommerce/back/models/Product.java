@@ -1,6 +1,8 @@
 package com.ecommerce.back.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "products")
@@ -10,21 +12,27 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name can not be blank")
     @Column(name = "name")
     private String name;
 
+    @NotBlank(message = "Image can not be blank")
     @Column(name = "image")
     private String image;
 
+    @NotBlank(message = "Brand can not be blank")
     @Column(name = "brand")
     private String brand;
 
+    @NotNull(message = "Price can not be null")
     @Column(name = "price")
     private Float price;
 
+    @NotBlank(message = "Category can not be blank")
     @Column(name = "category")
     private String category;
 
+    @NotNull(message = "Stock can not be null")
     @Column(name = "stock")
     private Float stock;
 
