@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -20,8 +18,33 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @GetMapping("/")
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllProducts(@RequestParam Map<String,String> allRequestParams) {
+        List<Product> products = productRepository.findAll();
+        List<Product> result = products;
+
+        String category = allRequestParams.get("category");
+        String searchKeyword = allRequestParams.get("searchKeyword");
+        String sortOrder = allRequestParams.get("sortOrder");
+
+        if (category != null) {
+            result = new ArrayList<>();
+            for (Product product: products) if (product.getCategory().equals(category)) result.add(product);
+        }
+        if (searchKeyword != null) {
+            List<Product> aux = new ArrayList<>();
+            for (Product product: result) if (product.getName().contains(searchKeyword)) aux.add(product);
+            result = aux;
+        }
+
+        if (sortOrder != null) {
+            if (sortOrder.equals("lowest")) {
+                result.sort((p1, p2) -> Float.compare(p1.getPrice(), p2.getPrice()));
+            } else {
+                result.sort((p1, p2) -> Float.compare(p2.getPrice(), p1.getPrice()));
+            }
+        }
+
+        return result;
     }
 
     @GetMapping("/{id}")
