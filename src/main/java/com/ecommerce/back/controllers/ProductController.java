@@ -2,9 +2,14 @@ package com.ecommerce.back.controllers;
 
 import com.ecommerce.back.exceptions.ResourceNotFoundException;
 import com.ecommerce.back.models.Product;
+import com.ecommerce.back.models.User;
 import com.ecommerce.back.repository.ProductRepository;
+import com.ecommerce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +21,9 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/")
     public List<Product> getAllProducts(@RequestParam Map<String,String> allRequestParams) {
@@ -55,13 +63,16 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public Product createProduct(@Valid @RequestBody Product product) {
-        return productRepository.save(product);
+    public ResponseEntity<?> createProduct(@Valid @RequestBody Product product) {
+        if (!isAdmin()) new ResponseEntity<>("Admin accounts only. This account is not admin", HttpStatus.INTERNAL_SERVER_ERROR);
+        Product newProduct = productRepository.save(product);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") Long productId,
                                                  @Valid @RequestBody Product productDetails) throws ResourceNotFoundException {
+        if (!isAdmin()) new ResponseEntity<>("Admin accounts only. This account is not admin", HttpStatus.INTERNAL_SERVER_ERROR);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
 
@@ -83,6 +94,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public Map<String, Boolean> deleteProduct(@PathVariable(value = "id") Long productId)
             throws ResourceNotFoundException {
+        if (!isAdmin()) new ResponseEntity<>("Admin accounts only. This account is not admin", HttpStatus.INTERNAL_SERVER_ERROR);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
 
@@ -90,5 +102,11 @@ public class ProductController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
+    }
+
+    private boolean isAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User current_user = userRepository.findByUsername(auth.getName());
+        return current_user.getAdmin();
     }
 }
