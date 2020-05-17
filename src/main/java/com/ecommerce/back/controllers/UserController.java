@@ -22,6 +22,7 @@ public class UserController {
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestBody User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setAdmin(false);
         userRepository.save(user);
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
