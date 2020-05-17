@@ -3,6 +3,7 @@ package com.ecommerce.back.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +28,9 @@ public class User {
     @NotNull
     @Column(name = "is_admin", columnDefinition = "boolean default false")
     private Boolean isAdmin;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Order> orders;
 
     public Long getId() {
         return id;
@@ -66,5 +70,13 @@ public class User {
 
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }
