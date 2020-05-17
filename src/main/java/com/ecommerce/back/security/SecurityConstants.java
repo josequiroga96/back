@@ -8,4 +8,5 @@ public class SecurityConstants {
     public static final String SIGN_UP_URL = "/users/sign-up";
     public static final String PRODUCTS_URL = "/api/products/";
     public static final String GET_PRODUCT_URL = "/api/products/{id}";
+    public static final String HEALTHCHECK = "/undefined";
 }

@@ -34,17 +34,17 @@ public class ProductController {
         String searchKeyword = allRequestParams.get("searchKeyword");
         String sortOrder = allRequestParams.get("sortOrder");
 
-        if (category != null) {
+        if (category != null && !category.equals("")) {
             result = new ArrayList<>();
             for (Product product: products) if (product.getCategory().equals(category)) result.add(product);
         }
-        if (searchKeyword != null) {
+        if (searchKeyword != null && !searchKeyword.equals("")) {
             List<Product> aux = new ArrayList<>();
             for (Product product: result) if (product.getName().contains(searchKeyword)) aux.add(product);
             result = aux;
         }
 
-        if (sortOrder != null) {
+        if (sortOrder != null && !sortOrder.equals("")) {
             if (sortOrder.equals("lowest")) {
                 result.sort((p1, p2) -> Float.compare(p1.getPrice(), p2.getPrice()));
             } else {

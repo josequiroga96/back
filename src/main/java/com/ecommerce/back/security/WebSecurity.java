@@ -33,7 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(SIGN_UP_URL, PRODUCTS_URL, GET_PRODUCT_URL)
+                .antMatchers(SIGN_UP_URL, PRODUCTS_URL, GET_PRODUCT_URL, HEALTHCHECK)
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
